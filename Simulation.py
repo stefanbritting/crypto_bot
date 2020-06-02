@@ -1,6 +1,8 @@
 import datetime
 import pandas as pd
 from Strategy import Strategy
+from SimApi import SimApi
+
 class Simulation():
     # class variables
     counter = 0
@@ -16,9 +18,34 @@ class Simulation():
     
     def start(self):
         print("... starting simulation")
-        data = self.load_historic_data()
-        data = Simulation.formatting_data(data)
-        strat = Strategy(data)
+        data    = self.load_historic_data()
+        data    = Simulation.formatting_data(data)
+        api     = SimApi(data)
+        
+        length = len(api.df.index)
+        
+        start_timestamp = api.df.iloc[0].name # Series.name, because the index is dtime itself
+        print ("### starting point:")
+        print(start_timestamp)
+        
+        # Simmulation run
+        for i in range(0,2):
+            
+            response = api.get_ohlc(start_timestamp + datetime.timedelta(hours=Simulation.counter)) # get ohlc from current timestamp
+            print(response)
+            
+            # add indicators to response => Strategy class
+            
+            # buy?
+                
+            # sell?
+            
+            
+            Simulation.counter = Simulation.counter  + 1
+            
+        print("Counter: "+ str(Simulation.counter))
+        
+########### Support Functions ########### 
     
     def load_historic_data(self):
         # https://www.CryptoDataDownload.com
