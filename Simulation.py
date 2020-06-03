@@ -6,7 +6,7 @@ from SimApi import SimApi
 class Simulation():
     # class variables
     counter = 0
-    def __init__(self,start_date="20-01-01" ,df="kraken_btcusd_1h"):
+    def __init__(self,start_date ,df="kraken_btcusd_1h"):
         """
         start_date STRING
             e.g. 20-06-13 [format:YY-MM-DD]
@@ -23,8 +23,8 @@ class Simulation():
         self.formatting_data()
         self.cut_dataframe()
         print(self.df)
-        api     = SimApi(self.df)
         
+        api     = SimApi(self.df)
         length = len(api.df.index)
         
         start_timestamp = api.df.iloc[0].name # Series.name, because the index is dtime itself
