@@ -6,21 +6,24 @@ from SimApi import SimApi
 class Simulation():
     # class variables
     counter = 0
-    def __init__(self,start_date=None,end_date=None,df="kraken_btcusd_1h"):
+    def __init__(self,start_date="20-01-01" ,df="kraken_btcusd_1h"):
         """
+        start_date STRING
+            e.g. 20-06-13 [format:YY-MM-DD]
         df STRING
             .csv file of the historic ohlc data place in /historic_data
         """
-        self.start_date = start_date
-        self.end_date   = end_date
+        self.start_date =  datetime.datetime.strptime(start_date, "%y-%m-%d")
         self.df         = df
         
     
     def start(self):
         print("... starting simulation")
-        data    = self.load_historic_data()
-        data    = Simulation.formatting_data(data)
-        api     = SimApi(data)
+        self.load_historic_data()
+        self.formatting_data()
+        self.cut_dataframe()
+        print(self.df)
+        api     = SimApi(self.df)
         
         length = len(api.df.index)
         
@@ -29,11 +32,11 @@ class Simulation():
         print(start_timestamp)
         
         # Simmulation run
-        for i in range(0,2):
+        for i in range(0,5):
             
             response = api.get_ohlc(start_timestamp + datetime.timedelta(hours=Simulation.counter)) # get ohlc from current timestamp
             print(response)
-            
+            print("----------------------------------------")
             # add indicators to response => Strategy class
             
             # buy?
@@ -55,15 +58,16 @@ class Simulation():
         print("### Converting date column to datetime format...")
         csv_data["Date"] = pd.to_datetime(csv_data["Date"], format='%Y-%m-%d %I-%p')
         
-        return csv_data
+        self.df = csv_data
 
-    @staticmethod
-    def formatting_data(df=None):
+    def formatting_data(self):
         print("### Formatting data...")
-        df = df.rename(columns={"Date": "dtime", "Open": "open", "High": "high", "Low": "low", "Close": "close", "Volume USD": "volume"})
-        df = df.drop(columns=['Symbol', 'Volume BTC'])
-        df = df.set_index("dtime")
-        df = df.sort_index()# order ascending
+        self.df = self.df.rename(columns={"Date": "dtime", "Open": "open", "High": "high", "Low": "low", "Close": "close", "Volume USD": "volume"})
+        self.df = self.df.drop(columns=['Symbol', 'Volume BTC'])
+        self.df = self.df.set_index("dtime")
+        self.df = self.df.sort_index()# order ascending
         #print(df)
         
-        return df
+    def cut_dataframe(self):
+        mask = (self.df.index >= self.start_date.strftime("%Y-%m-%d")) #boolean mask
+        self.df = self.df.loc[mask]
