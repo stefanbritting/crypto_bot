@@ -24,19 +24,18 @@ class Simulation():
         self.cut_dataframe()
         print(self.df)
         
-        api     = SimApi(self.df)
-        length = len(api.df.index)
-        
-        start_timestamp = api.df.iloc[0].name # Series.name, because the index is dtime itself
+        #api     = SimApi(self.df)
+        length = len(self.df.index)
+        strategy = Strategy(self.df)
+        start_timestamp = self.df.iloc[0].name # First entry of DF [Series.name, because the index is dtime itself]
         print ("### starting point:")
         print(start_timestamp)
         
         # Simmulation run
-        for i in range(0,5):
+        for i in range(0,length):
             
-            response = api.get_ohlc(start_timestamp + datetime.timedelta(hours=Simulation.counter)) # get ohlc from current timestamp
-            print(response)
-            print("----------------------------------------")
+            #response = api.get_ohlc(start_timestamp + datetime.timedelta(hours=Simulation.counter)) # get ohlc from current timestamp
+            
             # add indicators to response => Strategy class
             
             # buy?
@@ -45,6 +44,7 @@ class Simulation():
             
             
             Simulation.counter = Simulation.counter  + 1
+            print(Simulation.counter)
             
         print("Counter: "+ str(Simulation.counter))
         
