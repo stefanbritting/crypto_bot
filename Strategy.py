@@ -6,11 +6,13 @@ class Strategy():
         self.initialize_indicators()
 
     
-    def buy_signal(self):
-        pass
+    def buy_signal(self, timestamp):
+        # multiple signals weighted
+        return self.__buy_signal_1(timestamp)
     
-    def sell_signal(self):
-        pass
+    def sell_signal(self, timestamp):
+        # multiple signals weighted
+        return self.__sell_signal_1(timestamp)
     
     
     
@@ -27,9 +29,24 @@ class Strategy():
         self.df["bb_high_band"] = indicator_bb.bollinger_hband()
         self.df["bb_mid_band"]  = indicator_bb.bollinger_mavg()
         self.df["bb_low_band"]  = indicator_bb.bollinger_lband()
-            # ...more indicator classes
-            
-        # add feature to df
         
             # ...more featres
+    ########## Signals ##########
+    # each signal holds a set of rules that analyce current financial situation
+    # if value is NaN => False
+    ### Buy Signals
+    def __buy_signal_1(self, timestamp):
+        # close hit lower bollinger band
+        
+        if self.df.loc[timestamp]["close"] <= self.df.loc[timestamp]["bb_low_band"]:
+            return True
+        else:
+            return False
     
+    ### Sell Signals
+    def __sell_signal_1(self, timestamp):
+        if self.df.loc[timestamp]["close"] >= self.df.loc[timestamp]["bb_high_band"]:
+            return True
+        else:
+            return False
+        
