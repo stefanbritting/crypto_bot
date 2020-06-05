@@ -14,7 +14,7 @@ class Account():
         self.balance        = balance
         self.av_balance     = av_balance
         self.sec_balance    = {}
-        self.trades         = {}
+        self.trades         = []
         
         self.__split_av_balance()
         
@@ -50,7 +50,7 @@ class Account():
         if order_type == "buy":
             if self.sufficient_balance("euro", amount*price) == True:
                 self.balance["euro"]    = self.balance["euro"] - amount * price
-                self.balance[currency]  = self.balance["currency"] + amount
+                self.balance[currency]  = self.balance[currency] + amount
                 
                 trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
         elif order_type =="sell":
@@ -64,9 +64,9 @@ class Account():
             
         if trade:
             Account.number_of_trades = Account.number_of_trades + 1
-            print("-------------- Trade Nr:" + Account.number_of_trades)
+            print("-------------- Trade Nr:" + str(Account.number_of_trades))
             print(trade)
-                
+            self.trades.append(trade)
             return trade
             
         return False
@@ -75,4 +75,9 @@ class Account():
         print("####################")
         print("####################")
         print("########## Account Summary ##########")
+        print(self.balance)
+        print("### Number of Trades")
+        print(len(self.trades))
+        print("### Trades")
+        print(self.trades)
         

@@ -8,7 +8,7 @@ from Account    import Account
 class Simulation():
     # class variables
     counter = 0
-    def __init__(self,start_date ,df="kraken_btcusd_1h", balance={}, av_balance = 0.8, stake_amount = 0):
+    def __init__(self,start_date ,df="kraken_btcusd_1h", balance={}, av_balance = 0.8, stake_amount = 20):
         """
         start_date STRING
             e.g. 20-06-13 [format:YY-MM-DD]
@@ -54,7 +54,10 @@ class Simulation():
             
             temp_timestamp  = start_timestamp + datetime.timedelta(hours=Simulation.counter)
             price           = self.df.loc[temp_timestamp]["close"]
-            
+           ############################################# 
+           # if Simulation.counter == 1000 :
+            #    print("break")
+            ##########################################
             # buy?
             if strategy.buy_signal(temp_timestamp):
                 amount  = self.stake_amount / price
