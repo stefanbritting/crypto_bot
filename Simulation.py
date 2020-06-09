@@ -62,16 +62,22 @@ class Simulation():
            # if Simulation.counter == 1000 :
             #    print("break")
             ##########################################
-            # buy?
+            # buy? or close short position
             if strategy.buy_signal(temp_timestamp):
                 amount  = self.stake_amount / price
                 # amount, price
                 account.execute_order(order_type = "buy", currency = "btc", amount = amount, price = price )
+                # short
+                account.execute_order(order_type = "buy_short", currency = "btc", amount = -1, price = price ) # the amount comes from the open position
             
-            # sell?
+            # sell? or open short position
             if strategy.sell_signal(temp_timestamp):
                 account.execute_order(order_type="sell", currency="btc",amount=account.balance["btc"], price=price)
-            
+                
+                # short
+                amount  = self.stake_amount / price
+                account.execute_order(order_type="sell_short", currency="btc",amount = amount, price=price)
+                
             Simulation.counter = Simulation.counter  + 1
             print(Simulation.counter)
             

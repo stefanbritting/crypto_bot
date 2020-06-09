@@ -14,7 +14,7 @@ class Account():
         self.balance        = balance
         self.av_balance     = av_balance
         self.sec_balance    = {}
-        self.margin         = 0 # amount which is block due to open positions
+
         # (a sell closes a long and a buy closes a short)
         self.trades         = []
         self.open_positions = [] # for short trading
@@ -55,20 +55,37 @@ class Account():
                 self.balance[currency]  = self.balance[currency] + amount
                 
                 trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
+                
         elif order_type =="sell":
             if self.sufficient_balance(currency, amount) == True:
                 self.balance[currency]  = self.balance[currency] - amount
                 self.balance["euro"]    = self.balance["euro"] + amount * price
                 
                 trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
+            
         elif order_type == "sell_short":
+            # =open short position 
             # lend coins from broker and resell them right away because you expect price to fall
-            pass
+            if self.sufficient_balance("euro", amount*price) == True:
+                self.balance["euro"]    = self.balance["euro"] - amount * price #freezing money from balance
+                self.__add_short_position(currency, amount, price)
+                
+                trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
+               
         elif order_type == "buy_short":
+            # =close short position 
             # buying back the lended coins and give it back to broker
-            pass
+            # the open position will be closed in a FIFO (First in First out) manner
+            if len(self.open_positions) > 0:
+                p_or_l                  = (self.open_positions[0]["price"] - price) * self.open_positions[0]["amount"] # profit or loss
+                self.balance["euro"]    = self.balance["euro"] + p_or_l
+                
+                trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
+                
+                self.open_positions.pop(0)# drop oldest positio
+                
         else:
-            raise AttributeError("order_type is neither 'sell' nor 'buy' !")
+            raise AttributeError("order_type is neither 'sell' nor 'buy' nor 'sell_short' nor 'buy_short' !")
             
         if trade:
             Account.number_of_trades = Account.number_of_trades + 1
@@ -89,4 +106,11 @@ class Account():
         print(len(self.trades))
         print("### Trades")
         print(self.trades)
+        print("### Number of open positions")
+        print(len(self.open_positions))
+        print("### Open positions")
+        print(self.open_positions)
+        
+    def __add_short_position(self, currency, amount, price):
+        self.open_positions.append({"currency": currency, "amount": amount, "price": price})
         
