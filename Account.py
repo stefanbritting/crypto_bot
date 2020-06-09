@@ -2,7 +2,7 @@
 class Account():
     # 
     number_of_trades = 0
-    def __init__(self, balance = {}, av_balance = 0.8):
+    def __init__(self, balance = {}, av_balance = 1):
         """
         balance Dict
             {"btc:" 69, "euro": 12}
@@ -14,8 +14,10 @@ class Account():
         self.balance        = balance
         self.av_balance     = av_balance
         self.sec_balance    = {}
+        self.margin         = 0 # amount which is block due to open positions
+        # (a sell closes a long and a buy closes a short)
         self.trades         = []
-        
+        self.open_positions = [] # for short trading
         self.__split_av_balance()
         
 
@@ -59,6 +61,12 @@ class Account():
                 self.balance["euro"]    = self.balance["euro"] + amount * price
                 
                 trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
+        elif order_type == "sell_short":
+            # lend coins from broker and resell them right away because you expect price to fall
+            pass
+        elif order_type == "buy_short":
+            # buying back the lended coins and give it back to broker
+            pass
         else:
             raise AttributeError("order_type is neither 'sell' nor 'buy' !")
             
@@ -75,6 +83,7 @@ class Account():
         print("####################")
         print("####################")
         print("########## Account Summary ##########")
+        print("Start Budget: " + str(self.av_balance))
         print(self.balance)
         print("### Number of Trades")
         print(len(self.trades))

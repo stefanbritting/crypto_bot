@@ -22,8 +22,12 @@ class Simulation():
         self.start_date     =  datetime.datetime.strptime(start_date, "%y-%m-%d")
         self.df             = df # for Strategy
         self.balance        = balance # for Account
-        self.av_balance     = av_balance # for Account
-        self.stake_amount   = stake_amount
+        
+        if stake_amount > av_balance * self.balance["euro"]:
+            raise AttributeError("Stake Amount is higher than available balance for trading! Adjust either: balance, av_balance or stake_amount")
+        else:
+            self.av_balance     = av_balance # for Account
+            self.stake_amount   = stake_amount
         
         print("########## Configuration ##########")
         print(self.__dict__) # print configuration
