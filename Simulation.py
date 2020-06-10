@@ -8,7 +8,7 @@ from Account    import Account
 class Simulation():
     # class variables
     counter = 0
-    def __init__(self,start_date ,df="kraken_btcusd_1h", balance={}, av_balance = 0.8, stake_amount = 20):
+    def __init__(self,start_date ,df="kraken_btcusd_1h", balance={}, av_balance = None, stake_amount = None, stop_loss = None):
         """
         start_date STRING
             e.g. 20-06-13 [format:YY-MM-DD]
@@ -18,16 +18,21 @@ class Simulation():
         
         stake_amount FLOAT
             chunk size of a orders (e.g. always buy in packages of 50 euro)
+        stop_loss FLOAT
+            % threshhold for stop_loss to close order/position if going in the wrong direction
         """
         self.start_date     =  datetime.datetime.strptime(start_date, "%y-%m-%d")
         self.df             = df # for Strategy
         self.balance        = balance # for Account
+
         
         if stake_amount > av_balance * self.balance["euro"]:
             raise AttributeError("Stake Amount is higher than available balance for trading! Adjust either: balance, av_balance or stake_amount")
         else:
             self.av_balance     = av_balance # for Account
             self.stake_amount   = stake_amount
+        
+        self.stop_loss = stop_loss
         
         print("########## Configuration ##########")
         print(self.__dict__) # print configuration
@@ -42,7 +47,7 @@ class Simulation():
         
         #api     = SimApi(self.df)
         length = len(self.df.index)
-        strategy = Strategy(self.df)
+        strategy = Strategy(df = self.df, stop_loss = self.stop_loss)
         print ("########## Financial Indicators added ##########")
         
         account = Account(balance=self.balance, av_balance = self.av_balance) 

@@ -17,7 +17,9 @@ class Account():
 
         # (a sell closes a long and a buy closes a short)
         self.trades         = []
+        self.open_orders    = []
         self.open_positions = [] # for short trading
+        
         self.__split_av_balance()
         
 
@@ -53,6 +55,7 @@ class Account():
             if self.sufficient_balance("euro", amount*price) == True:
                 self.balance["euro"]    = self.balance["euro"] - amount * price
                 self.balance[currency]  = self.balance[currency] + amount
+                self.__add_long_order(currency, amount, price)
                 
                 trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
                 
@@ -73,7 +76,7 @@ class Account():
                 trade = {"order_type": order_type, "currency": currency, "amount": amount, "price": price}
                
         elif order_type == "buy_short":
-            # =close short position 
+            # =close ALL short positions 
             # buying back the lended coins and give it back to broker
             # the open position will be closed in a FIFO (First in First out) manner
             if len(self.open_positions) > 0:
@@ -113,4 +116,7 @@ class Account():
         
     def __add_short_position(self, currency, amount, price):
         self.open_positions.append({"currency": currency, "amount": amount, "price": price})
+    
+    def __add_long_order(self, currency, amount, price):
+        self.open_orders.append({"currency": currency, "amount": amount, "price": price})
         
