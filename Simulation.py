@@ -63,6 +63,8 @@ class Simulation():
             
             temp_timestamp  = start_timestamp + datetime.timedelta(hours=Simulation.counter)
             price           = self.df.loc[temp_timestamp]["close"]
+           
+            #account.check_stop_loss()
            ############################################# 
            # if Simulation.counter == 1000 :
             #    print("break")
@@ -70,18 +72,18 @@ class Simulation():
             # buy? or close short position
             if strategy.buy_signal(temp_timestamp):
                 amount  = self.stake_amount / price
-                # amount, price
-                account.execute_order(order_type = "buy", currency = "btc", amount = amount, price = price )
-                # short
-                account.execute_order(order_type = "buy_short", currency = "btc", amount = -1, price = price ) # the amount comes from the open position
+                account.execute_order(timestamp= temp_timestamp, order_type = "buy", currency = "btc", amount = amount, price = price )
+                
+                # close short
+                account.close_all_short_positions(timestamp = temp_timestamp, current_price = price) 
             
             # sell? or open short position
             if strategy.sell_signal(temp_timestamp):
-                account.execute_order(order_type="sell", currency="btc",amount=account.balance["btc"], price=price)
+                account.close_all_long_positions(timestamp = temp_timestamp, current_price = price)
                 
-                # short
+                # open short
                 amount  = self.stake_amount / price
-                account.execute_order(order_type="sell_short", currency="btc",amount = amount, price=price)
+                account.execute_order(timestamp= temp_timestamp, order_type="sell_short", currency="btc",amount = amount, price=price)
                 
             Simulation.counter = Simulation.counter  + 1
             print(Simulation.counter)

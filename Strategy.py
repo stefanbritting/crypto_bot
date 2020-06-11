@@ -24,16 +24,11 @@ class Strategy():
         else:
             return False
             
-    def short_buy_signal(self, timestamp):
-        pass
-    
-    def short_sell_signal(self, timestamp):
-        pass
         
     def stop_loss_long(self, order_book, current_price):
         """
-            checks all open orders or positions if a stoploss needs to be triggered
-            op_book List
+            checks all open orders if a stoploss needs to be triggered
+            order_book List
                 list of open orders or positions
                 [{'currency': 'btc', 'amount': 0.0067, 'price': 7415.5},...]
         """
