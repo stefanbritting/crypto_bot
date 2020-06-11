@@ -70,6 +70,8 @@ class Simulation():
             #    print("break")
             ##########################################
             # buy? or close short position
+            account.check_stop_loss(timestamp = temp_timestamp, stop_loss_val = self.stop_loss, current_price = price)
+            
             if strategy.buy_signal(temp_timestamp):
                 amount  = self.stake_amount / price
                 account.execute_order(timestamp= temp_timestamp, order_type = "buy", currency = "btc", amount = amount, price = price )

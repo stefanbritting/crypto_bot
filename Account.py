@@ -3,7 +3,6 @@ from Trade import Trade
 
 class Account():
     # 
-    number_of_trades = 0
     def __init__(self, balance = {}, av_balance = None):
         """
         balance Dict
@@ -18,10 +17,11 @@ class Account():
         self.balance        = balance
         self.av_balance     = av_balance
         self.sec_balance    = {}
-
+        
+        self.balance["short_margin"] = 0 # initializing temp depot for margin trading
         # (a sell closes a long and a buy closes a short)
-        self.long_positions     = {} # dict of Trade() Objects
-        self.short_positions    = {} # dict of Trade() Objects
+        self.long_positions     = {} # {"<ID>": Trade-Object, "<ID>": Trade-Object ...}
+        self.short_positions    = {} #  {"<ID>": Trade-Object, "<ID>": Trade-Object ...}
         
         self.__split_av_balance()
         
@@ -68,7 +68,8 @@ class Account():
             # =open short position 
             # lend coins from broker and resell them right away because you expect price to fall
             if self.sufficient_balance("euro", amount*price) == True:
-                self.balance["euro"]    = self.balance["euro"] - amount * price #freezing money from balance
+                self.balance["euro"]            = self.balance["euro"] - amount * price #freezing money from balance
+                self.balance["short_margin"]    = self.balance["short_margin"] + amount * price
                 
                 trade = Trade(timestamp = timestamp, order_type= order_type, currency= currency, amount= amount, price= price)
                
@@ -79,25 +80,25 @@ class Account():
             raise AttributeError("order_type is neither 'sell' nor 'buy' nor 'sell_short' nor 'buy_short' !")
             
         if trade:
-            Account.number_of_trades = Account.number_of_trades + 1
-            print("-------------- Trade Nr:" + str(Account.number_of_trades))
-            print(trade)
+            
             return trade
             
         return False
         
     def close_all_long_positions(self, timestamp, current_price):
         trade = None
-        for pos in self.long_positions:
+        for pos in self.long_positions.values():
             if self.sufficient_balance(pos.currency, pos.amount) == True:
                 self.balance[pos.currency]  = self.balance[pos.currency] - pos.amount
                 self.balance["euro"]    = self.balance["euro"] + pos.amount * current_price
                 
-                del self.long_positions[pos.id]
+                
                 trade = Trade(timestamp = timestamp, order_type= "sell", currency= pos.currency, amount= pos.amount, price= current_price)
             else:
                 raise Exception("!Trading Amount ERROR! Not enough** " + pos.currency + "** to close position")
-                
+        # delete all positions
+        self.long_positions = {}
+        
         return trade
     
     def close_all_short_positions(self, timestamp, current_price):
@@ -105,15 +106,24 @@ class Account():
             # buying back the lended coins and give it back to broker
             # the open position will be closed in a FIFO (First in First out) manner
         trade = None
-        for pos in self.short_positions:
-            p_or_l = (pos.price - current_price) * pos.amount # profit or loss
-            self.balance["euro"]    = self.balance["euro"] + p_or_l
+        for pos in self.short_positions.values():
+            p_or_l = (pos.price - current_price) * pos.amount
+            self.balance["short_margin"]    = self.balance["short_margin"] + p_or_l
             
-            del self.short_positions[pos.id]
             trade = Trade(timestamp = timestamp, order_type= "buy_short", currency= pos.currency, amount= pos.amount, price= current_price)
         
+            self.balance["euro"] = self.balance["euro"] + self.balance["short_margin"] # profit or loss from margin trade
+        
+        if self.balance["short_margin"] < 0:
+            print("!!!!!!!Margin negative!")
+        # delete all positions
+        self.short_positions = {}
+        # reset margin
+        self.balance["short_margin"] = 0
+        
+        
         return trade
-    def check_stop_loss(self, stop_loss_val, current_price):
+    def check_stop_loss(self, timestamp, stop_loss_val, current_price):
         """
             checks if current long or short positions need to be 
             canceled in order too loose less money
@@ -122,15 +132,17 @@ class Account():
                 % of stop_loss; E.g. if long & stop_loss_val=2% 
                     => if price already lost 2% in value position will be sold
         """
-        for long_pos in self.long_positions:
-            if current_price  < long_pos.price * (1 - stop_loss_val):
-                print("********** Executing Stop-Loss for Long Position **********")
-                #self.execute_order("sell", long_pos.currency, long_pos.amount, current_price)
+        for long_pos in self.long_positions.values():
+            if current_price  < long_pos.price * (1 - stop_loss_val) and len(self.long_positions) > 0:
+                print("********** Executing Stop-Loss for all Long Positions **********")
+                self.close_all_long_positions(timestamp = timestamp, current_price = current_price)
                 
-                # remove trade from long positions
-        for short_pos in self.short_positions:
-            pass
-            # remove trade from short positions
+        for short_pos in self.short_positions.values():
+            # this logic automatically also works as a trailling stoploss
+            # as new open short positions will lower the current stop-loss trigger
+            if current_price  > short_pos.price * (1 + stop_loss_val) and len(self.short_positions) > 0:
+                print("********** Executing Stop-Loss for all Short Positions **********")
+                self.close_all_short_positions(timestamp = timestamp, current_price = current_price)
         
     def summary (self):
         print("####################")
