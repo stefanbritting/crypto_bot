@@ -112,7 +112,7 @@ class Account():
             
             trade = Trade(timestamp = timestamp, order_type= "buy_short", currency= pos.currency, amount= pos.amount, price= current_price)
         
-            self.balance["euro"] = self.balance["euro"] + self.balance["short_margin"] # profit or loss from margin trade
+        self.balance["euro"] = self.balance["euro"] + self.balance["short_margin"] # profit or loss from margin trade
         
         if self.balance["short_margin"] < 0:
             print("!!!!!!!Margin negative!")

@@ -73,7 +73,7 @@ class Simulation():
             account.check_stop_loss(timestamp = temp_timestamp, stop_loss_val = self.stop_loss, current_price = price)
             
             if strategy.buy_signal(temp_timestamp):
-                amount  = self.stake_amount / price
+                amount  = round(self.stake_amount / price, 15)
                 account.execute_order(timestamp= temp_timestamp, order_type = "buy", currency = "btc", amount = amount, price = price )
                 
                 # close short
@@ -84,7 +84,7 @@ class Simulation():
                 account.close_all_long_positions(timestamp = temp_timestamp, current_price = price)
                 
                 # open short
-                amount  = self.stake_amount / price
+                amount  = round(self.stake_amount / price, 15)
                 account.execute_order(timestamp= temp_timestamp, order_type="sell_short", currency="btc",amount = amount, price=price)
                 
             Simulation.counter = Simulation.counter  + 1
