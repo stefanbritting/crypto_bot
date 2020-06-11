@@ -93,6 +93,14 @@ class Simulation():
         print("Counter: "+ str(Simulation.counter))
         account.summary()
         
+        if len(account.short_positions) > 0 or len(account.long_positions) > 0:
+            # liquidate all assets at current price
+            account.close_all_short_positions(timestamp = temp_timestamp, current_price = price)
+            account.close_all_long_positions(timestamp = temp_timestamp, current_price = price)
+            print("-------------------------------------------------")
+            print("########## Account Summary with all Assets Liquidated ##########")
+            account.summary()
+        
 ########### Support Functions ########### 
     
     def load_historic_data(self):

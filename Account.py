@@ -153,10 +153,11 @@ class Account():
         print("### Number of Trades")
         print(len(Trade.trades))
         print("### Trades")
-        print(Trade.trades)
-        print("### Number of open positions")
+        #print(Trade.trades)
+        print("### Number of open short positions")
         print(len(self.short_positions))
-        print("### Open positions")
-        print(self.short_positions)
+        print("### Number of open long positions")
+        print(len(self.short_positions))
+
         
         
