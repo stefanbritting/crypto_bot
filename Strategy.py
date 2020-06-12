@@ -59,6 +59,8 @@ class Strategy():
         self.df["bb_mid_band"]  = indicator_bb.bollinger_mavg()
         self.df["bb_low_band"]  = indicator_bb.bollinger_lband()
         
+            # ressistance line indicators
+        
             # ...more featres
     ########## Signals ##########
     # each signal holds a set of rules that analyce current financial situation
