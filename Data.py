@@ -8,6 +8,7 @@ class Data():
             e.g. 20-06-13 [format:YY-MM-DD]
         csv STRING
             .csv file of the historic ohlc data place in /historic_data
+            Format: Date,Symbol,Open,High,Low,Close,Volume BTC,Volume USD
         """
         self.start_date     =  datetime.datetime.strptime(start_date, "%y-%m-%d")
         self.csv = csv

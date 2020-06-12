@@ -1,12 +1,16 @@
 from Data               import Data
 from Strategy           import Strategy
+from Account            import Account
 from Simulation         import Simulation as Sim
+
 from optimize.optimize  import Optimizer
 
-data = Data(start_date="20-04-01")
-df = data.load()
-strategy = Strategy(df=df)
-sim = Sim(strategy = strategy, balance={"euro": 1000, "btc": 0}, av_balance = 0.8, stake_amount=50, stop_loss = 0.02)
+data        = Data(start_date="20-04-01")
+df          = data.load()
+strategy    = Strategy(df=df)
+account     = Account(balance={"euro": 1000, "btc": 0}, av_balance = 0.8)
+
+sim = Sim(strategy = strategy, account = account, stake_amount=50, stop_loss = 0.02)
 test = sim.start() 
 
 def negate_sim(func):
