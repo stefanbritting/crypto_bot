@@ -2,7 +2,6 @@ import datetime
 import pandas as pd
 
 from Strategy   import Strategy
-from SimApi     import SimApi
 from Account    import Account
 from Trade      import Trade
 
