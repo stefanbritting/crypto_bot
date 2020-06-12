@@ -1,8 +1,13 @@
 import ta #https://github.com/bukosabino/ta
 class Strategy():
     
-    def __init__(self, df=None):
-        self.df = df
+    def __init__(self, df=None, periods = None):
+        """
+            periods INT
+                number of periods that should be considered for indicator calculation
+        """
+        self.df         = df
+        self.periods    = periods
         self.initialize_indicators()
 
 
@@ -31,12 +36,12 @@ class Strategy():
         self.df["ADI"]      = ta.volume.AccDistIndexIndicator(high=self.df["high"], low=self.df["low"], close=self.df["close"], volume=self.df["volume"]).acc_dist_index()
         
             # Average Directional Movement Index
-        indivator_adx       = ta.trend.ADXIndicator(high=self.df["high"], low=self.df["low"], close=self.df["close"], n = 36 )
+        indivator_adx       = ta.trend.ADXIndicator(high=self.df["high"], low=self.df["low"], close=self.df["close"], n = self.periods  )
         self.df["adx_neg"]      = indivator_adx.adx_neg()
         self.df["adx_pos"]      = indivator_adx.adx_pos()
         self.df["adx"]          = indivator_adx.adx()
             # Bollinger Bands
-        indicator_bb            = ta.volatility.BollingerBands(self.df["close"], n = 36)
+        indicator_bb            = ta.volatility.BollingerBands(self.df["close"], n = self.periods )
         self.df["bb_high_band"] = indicator_bb.bollinger_hband()
         self.df["bb_mid_band"]  = indicator_bb.bollinger_mavg()
         self.df["bb_low_band"]  = indicator_bb.bollinger_lband()

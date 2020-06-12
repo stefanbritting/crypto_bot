@@ -6,7 +6,7 @@ from Trade      import Trade
 
 class Simulation():
     # class variables
-    counter = 0
+    
     def __init__(self,strategy = None, account = None, stake_amount = None, stop_loss = None):
         """
         start_date pandas DATETIME
@@ -30,7 +30,8 @@ class Simulation():
         else:
             self.stake_amount = stake_amount
             
-        self.stop_loss = stop_loss
+        self.stop_loss  = stop_loss
+        self.counter    = 0
         
         print("########## Configuration ##########")
         print(self.__dict__) # print configuration
@@ -50,11 +51,9 @@ class Simulation():
         print(start_timestamp)
         
         # Simmulation run
-        for i in range(0,length):
+        for i in range(0,length-1):
             
-            #response = api.get_ohlc(start_timestamp + datetime.timedelta(hours=Simulation.counter)) # get ohlc from current timestamp
-            
-            temp_timestamp  = start_timestamp + datetime.timedelta(hours=Simulation.counter)
+            temp_timestamp  = start_timestamp + datetime.timedelta(hours=self.counter)
             price           = self.df.loc[temp_timestamp]["close"]
            
             #account.check_stop_loss()
@@ -80,10 +79,10 @@ class Simulation():
                 amount  = round(self.stake_amount / price, 15)
                 account.execute_order(timestamp= temp_timestamp, order_type="sell_short", currency="btc",amount = amount, price=price)
                 
-            Simulation.counter = Simulation.counter  + 1
-            print(Simulation.counter)
+            self.counter = self.counter  + 1
+            print(self.counter)
             
-        print("Counter: "+ str(Simulation.counter))
+        print("Counter: "+ str(self.counter))
         account.summary()
         
         if len(account.short_positions) > 0 or len(account.long_positions) > 0:

@@ -15,7 +15,10 @@ class Optimizer():
                 maximum number of optimazation iterations
         """
         self.func       = func
-        self.space      = hp.uniform('x', -5, 6)
+        # optimizing for FLOAT values
+        #self.space      = hp.uniform('x', 36, 200)
+        # optimizing for Integer values
+        self.space      = hp.quniform('my_param', 36, 200, q=1)
         self.algorithm  = tpe.suggest # creating algorithm
         self.trials     = Trials() # to check records
         self.max_evals  = max_evals
