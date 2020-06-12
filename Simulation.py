@@ -102,7 +102,7 @@ class Simulation():
             print("########## Account Summary with all Assets Liquidated ##########")
             account.summary()
         
-        return {"accuont": account, "trades": Trade.trades}
+        return {"account": account, "trades": Trade.trades}
         
 ########### Support Functions ########### 
     
