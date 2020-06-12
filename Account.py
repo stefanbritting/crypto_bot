@@ -35,7 +35,7 @@ class Account():
             self.balance[ba]        =  self.balance[ba] * self.av_balance
     
     def sufficient_balance(self, currency, amount):
-        if self.balance[currency] >= amount and amount != 0:
+        if round(self.balance[currency],15) >= amount and amount != 0:
             return True
         else:
             return False
@@ -90,7 +90,7 @@ class Account():
         for pos in self.long_positions.values():
             if self.sufficient_balance(pos.currency, pos.amount) == True:
                 self.balance[pos.currency]  = self.balance[pos.currency] - pos.amount
-                self.balance["euro"]    = self.balance["euro"] + pos.amount * current_price
+                self.balance["euro"]        = self.balance["euro"] + pos.amount * current_price
                 
                 
                 trade = Trade(timestamp = timestamp, order_type= "sell", currency= pos.currency, amount= pos.amount, price= current_price)

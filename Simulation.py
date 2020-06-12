@@ -4,6 +4,7 @@ import pandas as pd
 from Strategy   import Strategy
 from SimApi     import SimApi
 from Account    import Account
+from Trade      import Trade
 
 class Simulation():
     # class variables
@@ -100,6 +101,8 @@ class Simulation():
             print("-------------------------------------------------")
             print("########## Account Summary with all Assets Liquidated ##########")
             account.summary()
+        
+        return {"accuont": account, "trades": Trade.trades}
         
 ########### Support Functions ########### 
     
