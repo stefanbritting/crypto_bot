@@ -8,10 +8,10 @@ from Trade      import Trade
 class Simulation():
     # class variables
     counter = 0
-    def __init__(self,start_date ,df="kraken_btcusd_1h",strategy = None, balance={}, av_balance = None, stake_amount = None, stop_loss = None):
+    def __init__(self,strategy = None, balance={}, av_balance = None, stake_amount = None, stop_loss = None):
         """
-        start_date STRING
-            e.g. 20-06-13 [format:YY-MM-DD]
+        start_date pandas DATETIME
+            
         df STRING
             .csv file of the historic ohlc data place in /historic_data
         balance
@@ -21,9 +21,9 @@ class Simulation():
         stop_loss FLOAT
             % threshhold for stop_loss to close order/position if going in the wrong direction
         """
-        self.start_date     =  datetime.datetime.strptime(start_date, "%y-%m-%d")
-        self.df             = df # for Strategy
-        #self.strategy       = strategy
+        self.start_date     = strategy.df.iloc[0].name # why name? => timestamp is index
+        self.df             = strategy.df
+        self.strategy       = strategy
         self.balance        = balance # for Account
 
         
@@ -41,16 +41,10 @@ class Simulation():
     
     def start(self):
         print("##########... starting simulation ##########")
-        self.load_historic_data()
-        self.formatting_data()
-        self.cut_dataframe()
-        print(self.df)
         
-        #api     = SimApi(self.df)
         length = len(self.df.index)
-        #strategy = self.strategy
-        strategy = Strategy(df = self.df)
-        print ("########## Financial Indicators added ##########")
+        strategy = self.strategy
+        
         
         account = Account(balance=self.balance, av_balance = self.av_balance) 
         

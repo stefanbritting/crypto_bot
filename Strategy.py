@@ -44,6 +44,7 @@ class Strategy():
             # ressistance line indicators
         
             # ...more featres
+        print ("########## Financial Indicators added ##########")
     ########## Signals ##########
     # each signal holds a set of rules that analyce current financial situation
     # if value is NaN => False
