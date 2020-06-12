@@ -1,13 +1,10 @@
 import ta #https://github.com/bukosabino/ta
 class Strategy():
     
-    def __init__(self, df=None, stop_loss = None):
+    def __init__(self, df=None):
         self.df = df
         self.initialize_indicators()
-        if not stop_loss:
-            raise Exception("stop_loss % is not set! This is a severe risk.")
-        else:
-            self.stop_loss = stop_loss
+
 
     
     def buy_signal(self, timestamp):
@@ -23,21 +20,6 @@ class Strategy():
             return True
         else:
             return False
-            
-        
-    def stop_loss_long(self, order_book, current_price):
-        """
-            checks all open orders if a stoploss needs to be triggered
-            order_book List
-                list of open orders or positions
-                [{'currency': 'btc', 'amount': 0.0067, 'price': 7415.5},...]
-        """
-        for order in order_book:
-            if current_price  < order.price * (1-self.stop_loss):
-                pass
-        pass
-    
-    
     
     
     def initialize_indicators(self):

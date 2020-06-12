@@ -8,7 +8,7 @@ from Trade      import Trade
 class Simulation():
     # class variables
     counter = 0
-    def __init__(self,start_date ,df="kraken_btcusd_1h", balance={}, av_balance = None, stake_amount = None, stop_loss = None):
+    def __init__(self,start_date ,df="kraken_btcusd_1h",strategy = None, balance={}, av_balance = None, stake_amount = None, stop_loss = None):
         """
         start_date STRING
             e.g. 20-06-13 [format:YY-MM-DD]
@@ -23,6 +23,7 @@ class Simulation():
         """
         self.start_date     =  datetime.datetime.strptime(start_date, "%y-%m-%d")
         self.df             = df # for Strategy
+        #self.strategy       = strategy
         self.balance        = balance # for Account
 
         
@@ -47,7 +48,8 @@ class Simulation():
         
         #api     = SimApi(self.df)
         length = len(self.df.index)
-        strategy = Strategy(df = self.df, stop_loss = self.stop_loss)
+        #strategy = self.strategy
+        strategy = Strategy(df = self.df)
         print ("########## Financial Indicators added ##########")
         
         account = Account(balance=self.balance, av_balance = self.av_balance) 
