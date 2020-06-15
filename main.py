@@ -10,7 +10,7 @@ def opt_wrapper(periods):
         optimizing for periods
     """
     periods = int(periods) # space from optimizer returns floats
-    
+    print("periods: " + str(periods))
     data        = Data(start_date="20-05-01") # historical data interfal: hours
     df          = data.load()
     strategy    = Strategy(df=df, periods = periods) 
@@ -25,7 +25,7 @@ def opt_wrapper(periods):
     return sim_result
 
 def normal_sim():
-    data        = Data(start_date="20-05-01") # historical data interfal: hours
+    data        = Data(start_date="19-12-01") # historical data interfal: hours
     df          = data.load()
     strategy    = Strategy(df=df, periods = 47) 
     account     = Account(balance={"euro": 1000, "btc": 0}, av_balance = 0.8)
@@ -34,11 +34,11 @@ def normal_sim():
     sim_result = sim.start() 
     
     return sim_result    
-
+"""
 test = normal_sim()
 """
-optimizer = Optimizer(func = opt_wrapper, domain_space = "test", max_evals=5)
+optimizer = Optimizer(func = opt_wrapper, domain_space = "test", max_evals=2)
 test = optimizer.start()
 print(test)
-"""
+
 
