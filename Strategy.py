@@ -1,13 +1,15 @@
 import ta #https://github.com/bukosabino/ta
 class Strategy():
     
-    def __init__(self, df=None, stop_loss = None):
-        self.df = df
+    def __init__(self, df=None, periods = None):
+        """
+            periods INT
+                number of periods that should be considered for indicator calculation
+        """
+        self.df         = df
+        self.periods    = periods
         self.initialize_indicators()
-        if not stop_loss:
-            raise Exception("stop_loss % is not set! This is a severe risk.")
-        else:
-            self.stop_loss = stop_loss
+
 
     
     def buy_signal(self, timestamp):
@@ -23,21 +25,6 @@ class Strategy():
             return True
         else:
             return False
-            
-        
-    def stop_loss_long(self, order_book, current_price):
-        """
-            checks all open orders if a stoploss needs to be triggered
-            order_book List
-                list of open orders or positions
-                [{'currency': 'btc', 'amount': 0.0067, 'price': 7415.5},...]
-        """
-        for order in order_book:
-            if current_price  < order.price * (1-self.stop_loss):
-                pass
-        pass
-    
-    
     
     
     def initialize_indicators(self):
@@ -49,17 +36,20 @@ class Strategy():
         self.df["ADI"]      = ta.volume.AccDistIndexIndicator(high=self.df["high"], low=self.df["low"], close=self.df["close"], volume=self.df["volume"]).acc_dist_index()
         
             # Average Directional Movement Index
-        indivator_adx       = ta.trend.ADXIndicator(high=self.df["high"], low=self.df["low"], close=self.df["close"], n = 36 )
+        indivator_adx       = ta.trend.ADXIndicator(high=self.df["high"], low=self.df["low"], close=self.df["close"], n = self.periods  )
         self.df["adx_neg"]      = indivator_adx.adx_neg()
         self.df["adx_pos"]      = indivator_adx.adx_pos()
         self.df["adx"]          = indivator_adx.adx()
             # Bollinger Bands
-        indicator_bb            = ta.volatility.BollingerBands(self.df["close"], n = 36)
+        indicator_bb            = ta.volatility.BollingerBands(self.df["close"], n = self.periods )
         self.df["bb_high_band"] = indicator_bb.bollinger_hband()
         self.df["bb_mid_band"]  = indicator_bb.bollinger_mavg()
         self.df["bb_low_band"]  = indicator_bb.bollinger_lband()
         
+            # ressistance line indicators
+        
             # ...more featres
+        print ("########## Financial Indicators added ##########")
     ########## Signals ##########
     # each signal holds a set of rules that analyce current financial situation
     # if value is NaN => False
