@@ -10,13 +10,13 @@ def opt_wrapper(params):
         optimizing for periods
     """
     # assign parameters
-    periods = int(params[0]) # space from optimizer returns floats
-    
+    periods     = int(params[0]) # space from optimizer returns floats
+    adx_value   = int(params[1])
     
     ###### Define Simulations ###### 
-    data        = Data(start_date="20-05-01") # historical data interfal: hours
+    data        = Data(start_date="19-12-01") # historical data interfal: hours
     df          = data.load()
-    strategy    = Strategy(df=df, periods = periods) 
+    strategy    = Strategy(df=df, periods = periods, adx_value = adx_value) 
     account     = Account(balance={"euro": 1000, "btc": 0}, av_balance = 0.8)
     
     sim = Sim(strategy = strategy, account = account, stake_amount=50, stop_loss = 0.02)
@@ -32,9 +32,9 @@ test = normal_sim()
 """
 ############# Parameter for Hyper-Parameter-Tuning ############# 
 # defining variables and their spaces
-domain_space    = [hp.quniform('periods', 36, 40, q=1), hp.quniform('test', 36, 40, q=1)]
+domain_space    = [hp.quniform('periods', 36, 800, q=1), hp.quniform('adx_value', 20, 26, q=1)]
 
-optimizer       = Optimizer(func = opt_wrapper, domain_space = domain_space, max_evals=4)
+optimizer       = Optimizer(func = opt_wrapper, domain_space = domain_space, max_evals=40)
 
 test = optimizer.start()
 print(test)
