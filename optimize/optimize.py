@@ -20,7 +20,7 @@ class Optimizer():
         # optimizing for FLOAT values
         #self.space      = hp.uniform('x', 36, 200)
         # optimizing for Integer values
-        self.space      = hp.quniform('my_param', 36, 800, q=1)
+        self.space      = domain_space
         self.algorithm  = tpe.suggest # creating algorithm
         self.trials     = Trials() # to check records
         self.max_evals  = max_evals

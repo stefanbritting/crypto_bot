@@ -2,15 +2,18 @@ from Data               import Data
 from Strategy           import Strategy
 from Account            import Account
 from Simulation         import Simulation as Sim
-
+from hyperopt           import hp
 from optimize.optimize  import Optimizer, poly_func
 
-def opt_wrapper(periods):
+def opt_wrapper(params):
     """
         optimizing for periods
     """
-    periods = int(periods) # space from optimizer returns floats
-    print("periods: " + str(periods))
+    # assign parameters
+    periods = int(params[0]) # space from optimizer returns floats
+    
+    
+    ###### Define Simulations ###### 
     data        = Data(start_date="20-05-01") # historical data interfal: hours
     df          = data.load()
     strategy    = Strategy(df=df, periods = periods) 
@@ -23,6 +26,20 @@ def opt_wrapper(periods):
     sim_result = - sim_result["account"].balance["euro"]
     
     return sim_result
+    
+"""
+test = normal_sim()
+"""
+############# Parameter for Hyper-Parameter-Tuning ############# 
+# defining variables and their spaces
+domain_space    = [hp.quniform('periods', 36, 40, q=1), hp.quniform('test', 36, 40, q=1)]
+
+optimizer       = Optimizer(func = opt_wrapper, domain_space = domain_space, max_evals=4)
+
+test = optimizer.start()
+print(test)
+
+#########################################################################################
 
 def normal_sim():
     data        = Data(start_date="19-12-01") # historical data interfal: hours
@@ -33,12 +50,4 @@ def normal_sim():
     sim = Sim(strategy = strategy, account = account, stake_amount=50, stop_loss = 0.02)
     sim_result = sim.start() 
     
-    return sim_result    
-"""
-test = normal_sim()
-"""
-optimizer = Optimizer(func = opt_wrapper, domain_space = "test", max_evals=2)
-test = optimizer.start()
-print(test)
-
-
+    return sim_result
