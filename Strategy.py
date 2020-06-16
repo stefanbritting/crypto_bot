@@ -1,13 +1,14 @@
 import ta #https://github.com/bukosabino/ta
 class Strategy():
     
-    def __init__(self, df=None, periods = None):
+    def __init__(self, df=None, periods = None, adx_value = None):
         """
             periods INT
                 number of periods that should be considered for indicator calculation
         """
         self.df         = df
         self.periods    = periods
+        self.adx_value  = adx_value
         self.initialize_indicators()
 
 
@@ -66,7 +67,7 @@ class Strategy():
         # ADX > 22 | 25
         # +di > -di
         
-        if self.df.loc[timestamp]["adx"] > 2 and self.df.loc[timestamp]["adx_pos"] > self.df.loc[timestamp]["adx_neg"] :
+        if self.df.loc[timestamp]["adx"] > self.adx_value and self.df.loc[timestamp]["adx_pos"] > self.df.loc[timestamp]["adx_neg"] :
             return True
         else:
             return False
