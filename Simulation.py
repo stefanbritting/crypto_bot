@@ -4,6 +4,9 @@ import pandas as pd
 from Account    import Account
 from Trade      import Trade
 
+
+
+
 class Simulation():
     # class variables
     
@@ -51,6 +54,7 @@ class Simulation():
         print(start_timestamp)
         
         # Simmulation run
+        
         for i in range(0,length-1):
             
             temp_timestamp  = start_timestamp + datetime.timedelta(hours=self.counter)

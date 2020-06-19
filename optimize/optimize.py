@@ -47,7 +47,7 @@ class Optimizer():
         
     @staticmethod
     def __write_to_csv(text):
-        with open('crypto_bot/optimize/results.csv', 'a', newline='') as csvfile:
+        with open('optimize/results.csv', 'a', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=' ',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
             writer.writerow(str(text))

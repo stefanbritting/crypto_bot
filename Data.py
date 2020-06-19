@@ -27,7 +27,7 @@ class Data():
         # loading historic data from an ohlc .csv
         
         print("### Loading csv file ...")
-        csv_data = pd.read_csv("crypto_bot/historic_data/" + self.csv + ".csv") #dataframe
+        csv_data = pd.read_csv("historic_data/" + self.csv + ".csv") #dataframe
         
         print("### Converting date column to datetime format...")
         csv_data["Date"] = pd.to_datetime(csv_data["Date"], format='%Y-%m-%d %I-%p')
