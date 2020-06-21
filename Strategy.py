@@ -88,6 +88,7 @@ class Strategy():
     def __buy_signal_4(self, timestamp):
         # Accumulation / Distribution Indicator
         # if stock price is falling, but AD is rising => indicates strength => buy
+        # https://towardsdatascience.com/linear-regression-in-6-lines-of-python-5e1d0cd05b8d
         pass
 ###############################################
     ### Sell Signals
