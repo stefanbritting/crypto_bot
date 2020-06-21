@@ -84,6 +84,11 @@ class Strategy():
             return True
         else:
             return False
+    
+    def __buy_signal_4(self, timestamp):
+        # Accumulation / Distribution Indicator
+        # if stock price is falling, but AD is rising => indicates strength => buy
+        pass
 ###############################################
     ### Sell Signals
     def __sell_signal_1(self, timestamp):
@@ -106,3 +111,8 @@ class Strategy():
             return True
         else:
             return False
+    
+    def __sell_signal_4(self, timestamp):
+         # Accumulation / Distribution Indicator
+        # if stock price is rising, but AD is falling => indicates weekness => sell
+        pass
