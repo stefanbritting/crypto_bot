@@ -10,7 +10,8 @@ RUN pip3 install --upgrade pip
 
 RUN pip3 --no-cache-dir install pandas \
     && pip3 --no-cache-dir install ta \
-    && pip3 --no-cache-dir install hyperopt
+    && pip3 --no-cache-dir install hyperopt \
+    && pip3 --no-cache-dir install -U scikit-learn
 
 # copy code base at the very end to use caching from Docker as everything before hasnt changed
 COPY . /app 

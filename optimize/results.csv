@@ -7,3 +7,6 @@ Parameter_name, Value
 [ ' # # # # | | B e s t | | R e s u l t | | # # # # ' , | | " { ' a d x _ v a l u e ' : | | 2 1 . 0 , | | ' p e r i o d s _ a d x ' : | | 3 1 . 0 , | | ' p e r i o d s _ b o l ' : | | 3 1 1 . 0 , | | ' p e r i o d s _ r s i ' : | | 4 2 0 . 0 } " ]
 { ' l o s s ' : | | - 8 0 0 . 0 , | | ' s t a t u s ' : | | ' o k ' , | | ' v a l u e s ' : | | { ' a d x _ v a l u e ' : | | [ 2 1 . 0 ] , | | ' p e r i o d s _ a d x ' : | | [ 3 1 . 0 ] , | | ' p e r i o d s _ b o l ' : | | [ 3 1 1 . 0 ] , | | ' p e r i o d s _ r s i ' : | | [ 4 2 0 . 0 ] } }
 [ ' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ' ]
+[ ' # # # # | | B e s t | | R e s u l t | | # # # # ' , | | " { ' a d x _ v a l u e ' : | | 2 5 . 0 , | | ' p e r i o d s _ a d x ' : | | 7 6 5 . 0 , | | ' p e r i o d s _ b o l ' : | | 3 4 0 . 0 , | | ' p e r i o d s _ r s i ' : | | 3 5 . 0 } " ]
+{ ' l o s s ' : | | - 7 9 7 . 8 6 8 1 0 3 7 8 0 2 4 1 8 , | | ' s t a t u s ' : | | ' o k ' , | | ' v a l u e s ' : | | { ' a d x _ v a l u e ' : | | [ 2 5 . 0 ] , | | ' p e r i o d s _ a d x ' : | | [ 7 6 5 . 0 ] , | | ' p e r i o d s _ b o l ' : | | [ 3 4 0 . 0 ] , | | ' p e r i o d s _ r s i ' : | | [ 3 5 . 0 ] } }
+[ ' - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - ' ]

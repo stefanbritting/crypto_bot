@@ -35,14 +35,14 @@ def opt_wrapper(params):
 
 ############# Parameter for Hyper-Parameter-Tuning ############# 
 # defining variables and their spaces
-"""
+
 domain_space    = [hp.quniform('periods_bol', 10, 800, q=1), hp.quniform('periods_adx', 10, 800, q=1), hp.quniform('periods_rsi', 5, 35, q=1), hp.quniform('adx_value', 20, 26, q=1)]
 
 optimizer       = Optimizer(func = opt_wrapper, domain_space = domain_space, max_evals=1)
 
 test = optimizer.start()
 print(test)
-"""
+
 #########################################################################################
 
 def normal_sim():
@@ -56,4 +56,4 @@ def normal_sim():
     
     return sim_result
     
-test = normal_sim()
+#
