@@ -36,7 +36,7 @@ def opt_wrapper(params):
 ############# Parameter for Hyper-Parameter-Tuning ############# 
 # defining variables and their spaces
 """
-domain_space    = [hp.quniform('periods_bol', 10, 800, q=1), hp.quniform('periods_adx', 10, 800, q=1), hp.quniform('periods_rsi', 10, 800, q=1), hp.quniform('adx_value', 20, 26, q=1)]
+domain_space    = [hp.quniform('periods_bol', 10, 800, q=1), hp.quniform('periods_adx', 10, 800, q=1), hp.quniform('periods_rsi', 5, 35, q=1), hp.quniform('adx_value', 20, 26, q=1)]
 
 optimizer       = Optimizer(func = opt_wrapper, domain_space = domain_space, max_evals=1)
 
@@ -48,7 +48,7 @@ print(test)
 def normal_sim():
     data        = Data(start_date="19-12-01") # historical data interfal: hours
     df          = data.load()
-    strategy    = Strategy(df=df, periods_bol = 760, periods_adx = 56,periods_rsi = 615, adx_value = 20)
+    strategy    = Strategy(df=df, periods_bol = 760, periods_adx = 56,periods_rsi = 14, adx_value = 20)
     account     = Account(balance={"euro": 1000, "btc": 0}, av_balance = 0.8)
     
     sim = Sim(strategy = strategy, account = account, stake_amount=50, stop_loss = 0.02)
