@@ -123,7 +123,7 @@ class Strategy():
             return False
     
     def __sell_signal_3(self, timestamp):
-        # close price higher than middle bollinger band
+        # 
         if self.df.loc[timestamp]["rsi"] > 70:
             return True
         else:
