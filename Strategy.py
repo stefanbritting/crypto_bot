@@ -1,7 +1,8 @@
 import ta #https://github.com/bukosabino/ta
+from CustomIndicators import CustomIndicators
 class Strategy():
     
-    def __init__(self, df=None, periods_bol = None, periods_adx = None, periods_rsi = None, adx_value = None):
+    def __init__(self, df=None, periods_bol = None, periods_adx = None, periods_rsi = None, adx_value = None, periods_ad = None):
         """
             periods INT
                 number of periods that should be considered for indicator calculation
@@ -11,20 +12,24 @@ class Strategy():
         self.periods_adx    = periods_adx
         self.periods_rsi    = periods_rsi
         self.adx_value      = adx_value
+        self.periods_ad    = periods_ad
+        
         self.initialize_indicators()
+        
+        self.ci             = CustomIndicators(self.df)
 
-
+    # ****** Note: the if functions with and are being executed in an order(left -  right)
     
     def buy_signal(self, timestamp):
         # multiple signals weighted
-        if self.__buy_signal_1(timestamp) and self.__buy_signal_2(timestamp) and self.__buy_signal_3:
+        if self.__buy_signal_1(timestamp) and self.__buy_signal_2(timestamp) and self.__buy_signal_3(timestamp):
             return True
         else:
             False
     
     def sell_signal(self, timestamp):
         # multiple signals weighted
-        if self.__sell_signal_1(timestamp) and self.__sell_signal_2(timestamp) and self.__sell_signal_3:
+        if self.__sell_signal_1(timestamp) and self.__sell_signal_2(timestamp) and self.__sell_signal_3(timestamp):
             return True
         else:
             return False
@@ -52,6 +57,10 @@ class Strategy():
             # RSI
         indicator_rsi   = ta.momentum.RSIIndicator(close = self.df["close"], n = self.periods_rsi )
         self.df["rsi"]  = indicator_rsi.rsi()
+            
+            # Accumulation / Distribution
+        indicator_acc_dist  = ta.volume.AccDistIndexIndicator(high=self.df["high"], low=self.df["low"], close=self.df["close"], volume=self.df["volume"])
+        self.df["acc_dist"] = indicator_acc_dist.acc_dist_index() 
             # ressistance line indicators
         
             # ...more featres
@@ -80,7 +89,7 @@ class Strategy():
     def __buy_signal_3(self, timestamp):
 
         
-        if self.df["rsi"] < 30:
+        if self.df.loc[timestamp]["rsi"] < 30:
             return True
         else:
             return False
@@ -89,7 +98,14 @@ class Strategy():
         # Accumulation / Distribution Indicator
         # if stock price is falling, but AD is rising => indicates strength => buy
         # https://towardsdatascience.com/linear-regression-in-6-lines-of-python-5e1d0cd05b8d
-        pass
+        
+        slope       = self.ci.get_slope_acc_dist(timestamp =  timestamp, i_range = self.periods_ad)
+        slope_close = self.ci.get_slope_closing_price(timestamp =  timestamp, i_range = self.periods_ad)
+        
+        if slope > 0 and slope_close < 0 :
+            return True
+        else:
+            return False
 ###############################################
     ### Sell Signals
     def __sell_signal_1(self, timestamp):
@@ -108,7 +124,7 @@ class Strategy():
     
     def __sell_signal_3(self, timestamp):
         # close price higher than middle bollinger band
-        if self.df["rsi"] > 70:
+        if self.df.loc[timestamp]["rsi"] > 70:
             return True
         else:
             return False
