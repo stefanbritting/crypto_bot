@@ -96,7 +96,8 @@ class Simulation():
             print("-------------------------------------------------")
             print("########## Account Summary with all Assets Liquidated ##########")
             account.summary()
-        
+            
+        Trade.save_as_csv()
         return {"account": account, "trades": Trade.trades}
         
 ########### Support Functions ########### 

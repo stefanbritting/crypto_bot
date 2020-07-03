@@ -1,4 +1,5 @@
 import random
+import csv
 class Trade():
     trades = [] # list of all trade objects
     def __init__(self, timestamp, order_type, currency, amount, price):
@@ -18,3 +19,12 @@ class Trade():
                                     currency    = self.currency,
                                     amount      = self.amount,
                                     price       = self.price)
+    @classmethod
+    def save_as_csv(cls):
+        
+        with open('trades.csv', 'w', newline='') as csvfile:
+            fieldnames = ["timestamp", "order_type", "currency", "amount", "price", "id"] # relevant attributes for documentation
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            for item in Trade.trades:
+                writer.writerow(item.__dict__)

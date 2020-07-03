@@ -22,7 +22,7 @@ class Strategy():
     
     def buy_signal(self, timestamp):
         # multiple signals weighted
-        if self.__buy_signal_1(timestamp) and self.__buy_signal_2(timestamp) and self.__buy_signal_3(timestamp):
+        if self.__buy_signal_1(timestamp) and self.__buy_signal_2(timestamp):#   and self.__buy_signal_3(timestamp):# and self.__buy_signal_4(timestamp):
             return True
         else:
             False
@@ -77,19 +77,20 @@ class Strategy():
         else:
             return False
     
+    
     def __buy_signal_2(self, timestamp):
+
+        
+        if self.df.loc[timestamp]["rsi"] < 30:
+            return True
+        else:
+            return False
+            
+    def __buy_signal_3(self, timestamp):
         # ADX > 22 | 25
         # +di > -di
         
         if self.df.loc[timestamp]["adx"] > self.adx_value and self.df.loc[timestamp]["adx_pos"] > self.df.loc[timestamp]["adx_neg"] :
-            return True
-        else:
-            return False
-    
-    def __buy_signal_3(self, timestamp):
-
-        
-        if self.df.loc[timestamp]["rsi"] < 30:
             return True
         else:
             return False
@@ -99,7 +100,7 @@ class Strategy():
         # if stock price is falling, but AD is rising => indicates strength => buy
         # https://towardsdatascience.com/linear-regression-in-6-lines-of-python-5e1d0cd05b8d
         
-        slope       = self.ci.get_slope_acc_dist(timestamp =  timestamp, i_range = self.periods_ad)
+        slope       = self.ci.get_slope_acc_dist(timestamp =  timestamp, i_range = self.periods_ad) # slope AD
         slope_close = self.ci.get_slope_closing_price(timestamp =  timestamp, i_range = self.periods_ad)
         
         if slope > 0 and slope_close < 0 :
