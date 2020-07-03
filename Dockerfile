@@ -8,7 +8,7 @@ RUN apt-get clean \
     
 RUN pip3 install --upgrade pip
 
-RUN pip3 --no-cache-dir install pandas \gi
+RUN pip3 --no-cache-dir install pandas \
     && pip3 --no-cache-dir install ta \
     && pip3 --no-cache-dir install hyperopt \
     && pip3 --no-cache-dir install -U scikit-learn
